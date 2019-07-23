@@ -1,0 +1,60 @@
+version: "3.5"
+
+services:
+  discovery-service:
+    build:
+      context: discovery-service
+    image: master/discovery-service:latest
+    ports:
+      - 8761:8761
+    networks:
+      - simple-network
+
+  api-gateway:
+    build:
+      context: api-gateway
+    image: master/api-gateway:latest
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+    ports:
+      - 8080:8080
+    networks:
+      - simple-network
+
+  demo:
+    build:
+      context: demo
+    image: master/demo:latest
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+#    ports:
+#      - 7071:7777
+    networks:
+      - simple-network
+
+  demo2:
+    build:
+      context: demo
+    image: master/demo:latest
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+#    ports:
+#      - 7072:7777
+    networks:
+      - simple-network
+
+  activemq:
+    image: webcenter/activemq
+    restart: always
+    ports:
+      - 1883:1883
+      - 5672:5672
+      - 8161:8161
+      - 61613:61613
+      - 61614:61614
+      - 61616:61616
+    networks:
+      - simple-network
+
+networks:
+  simple-network:
