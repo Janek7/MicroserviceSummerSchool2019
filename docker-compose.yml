@@ -43,6 +43,44 @@ services:
     networks:
       - simple-network
 
+  customer-service:
+    build:
+      context: customer-service
+    image: master/customer-service:latest
+    #    depends_on:
+    #      - discovery-service
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+      - "SPRING_ACTIVEMQ_BROKER_URL=tcp://activemq:61616"
+#    ports:
+#      - 7779:7779
+    networks:
+      - simple-network
+
+  catalog-service:
+    build:
+      context: catalog-service
+    image: master/catalog-service:latest
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+      - "SPRING_ACTIVEMQ_BROKER_URL=tcp://activemq:61616"
+#    ports:
+#      - 7776:7776
+    networks:
+      - simple-network
+
+  order-service:
+    build:
+      context: order-service
+    image: master/order-service:latest
+    environment:
+      - "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/"
+      - "SPRING_ACTIVEMQ_BROKER_URL=tcp://activemq:61616"
+#    ports:
+#      - 7778:7778
+    networks:
+      - simple-network
+
   activemq:
     image: webcenter/activemq
     restart: always
